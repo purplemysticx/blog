@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/favicon/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon.png">
+  <link rel="mask-icon" href="/images/favicon/safari-pinned-tab.svg" color="#222">
+  <link rel="manifest" href="/pwa.webmanifest">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.15.3/css/all.min.css" integrity="sha256-2H3fkXt6FEmrReK448mDVGKb3WW2ZZw35gI7vqHOE4Y=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" integrity="sha256-Vzbj7sDDS/woiFS3uNKo8eIuni59rjyNGtXfstRzStA=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"blog.caoyu.info","root":"/","images":"/images","scheme":"Gemini","version":"8.5.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":true,"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":"gitalk","storage":true,"lazyload":false,"nav":{"gitalk":{"order":-3},"livere":{"order":-1}},"activeClass":"gitalk"},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js"></script>
+<meta name="description" content="implement BPNN by python">
+<meta property="og:type" content="article">
+<meta property="og:title" content="BP神经网络算法(python实现)">
+<meta property="og:url" content="https://blog.caoyu.info/bpnn.html">
+<meta property="og:site_name" content="我还是个宝宝!">
+<meta property="og:description" content="implement BPNN by python">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2017-12-14T11:09:39.000Z">
+<meta property="article:modified_time" content="2020-11-11T16:31:07.000Z">
+<meta property="article:author" content="紫玄">
+<meta property="article:tag" content="python">
+<meta property="article:tag" content="classification">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://blog.caoyu.info/bpnn.html">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"en","comments":true,"permalink":"https://blog.caoyu.info/bpnn.html","path":"bpnn.html","title":"BP神经网络算法(python实现)"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>BP神经网络算法(python实现) | 我还是个宝宝!</title>
+  
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-108245491-2"></script>
+  <script class="next-config" data-name="google_analytics" type="application/json">{"tracking_id":"UA-108245491-2","only_pageview":false}</script>
+  <script src="/js/third-party/analytics/google-analytics.js"></script>
+
+  <script src="/js/third-party/analytics/baidu-analytics.js"></script>
+  <script async src="https://hm.baidu.com/hm.js?a621e40868a1043f41f060107790c2ff"></script>
+
+
+<link rel="manifest" href="/pwa.webmanifest" />
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+<link rel="alternate" href="/atom.xml" title="我还是个宝宝!" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <h1 class="site-title">我还是个宝宝!</h1>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">宝宝,就是我,耶~</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu">
+        <li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a></li>
+        <li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a></li>
+        <li class="menu-item menu-item-messages"><a href="/messages/" rel="section"><i class="fa fa-comments fa-fw"></i>messages</a></li>
+        <li class="menu-item menu-item-friends"><a href="/friends/" rel="section"><i class="fas fa-user-friends fa-fw"></i>friends</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup"><div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off" maxlength="80"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close" role="button">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="search-result-container no-result">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+        
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#BPNN"><span class="nav-number">1.</span> <span class="nav-text">BPNN</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#In-action"><span class="nav-number">2.</span> <span class="nav-text">In action</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Something-worth-noting"><span class="nav-number">3.</span> <span class="nav-text">Something worth noting</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-overview">
+            <div class="site-author site-overview-item animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="紫玄"
+      src="/images/favicon.png">
+  <p class="site-author-name" itemprop="name">紫玄</p>
+  <div class="site-description" itemprop="description">To infinity and beyond</div>
+</div>
+<div class="site-state-wrap site-overview-item animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">80</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+        <span class="site-state-item-count">12</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+        <span class="site-state-item-count">63</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="cc-license site-overview-item animated" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" class="cc-opacity" rel="noopener" target="_blank"><img src="https://cdn.jsdelivr.net/npm/@creativecommons/vocabulary@2020.11.3/assets/license_badges/small/by_nc_sa.svg" alt="Creative Commons"></a>
+  </div>
+
+
+  <div class="links-of-blogroll site-overview-item animated">
+    <div class="links-of-blogroll-title"><i class="fa fa-globe fa-fw"></i>
+      Links
+    </div>
+    <ul class="links-of-blogroll-list">
+        <li class="links-of-blogroll-item">
+          <a href="https://caoyu.info/" title="https:&#x2F;&#x2F;caoyu.info" rel="noopener" target="_blank">紫玄</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://yoooo.fun/" title="https:&#x2F;&#x2F;yoooo.fun" rel="noopener" target="_blank">YooooFun</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://uuznn.cn/" title="https:&#x2F;&#x2F;uuznn.cn" rel="noopener" target="_blank">柚子部落</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://siwei.info/" title="https:&#x2F;&#x2F;siwei.info" rel="noopener" target="_blank">Wey - SIWEI</a>
+        </li>
+    </ul>
+  </div>
+
+          </div>
+        </div>
+    </div>
+  </aside>
+  <div class="sidebar-dimmer"></div>
+
+
+    </header>
+
+    
+  <div class="back-to-top" role="button" aria-label="Back to top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+  <a href="https://github.com/pplmx" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://blog.caoyu.info/bpnn.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/favicon.png">
+      <meta itemprop="name" content="紫玄">
+      <meta itemprop="description" content="To infinity and beyond">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="我还是个宝宝!">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          BP神经网络算法(python实现)
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2017-12-14 11:09:39" itemprop="dateCreated datePublished" datetime="2017-12-14T11:09:39+00:00">2017-12-14</time>
+    </span>
+      <span class="post-meta-item">
+        <span class="post-meta-item-icon">
+          <i class="far fa-calendar-check"></i>
+        </span>
+        <span class="post-meta-item-text">Edited on</span>
+        <time title="Modified: 2020-11-11 16:31:07" itemprop="dateModified" datetime="2020-11-11T16:31:07+00:00">2020-11-11</time>
+      </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/algorithm/" itemprop="url" rel="index"><span itemprop="name">algorithm</span></a>
+        </span>
+    </span>
+
+  
+    <span class="post-meta-item" title="Views" id="busuanzi_container_page_pv">
+      <span class="post-meta-item-icon">
+        <i class="far fa-eye"></i>
+      </span>
+      <span class="post-meta-item-text">Views: </span>
+      <span id="busuanzi_value_page_pv"></span>
+    </span>
+      </div>
+      <div class="post-meta">
+    <span class="post-meta-item" title="Symbols count in article">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">Symbols count in article: </span>
+      <span>7.3k</span>
+    </span>
+    <span class="post-meta-item" title="Reading time">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">Reading time &asymp;</span>
+      <span>7 mins.</span>
+    </span>
+</div>
+
+            <div class="post-description">implement BPNN by python</div>
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <h1 id="BPNN"><a href="#BPNN" class="headerlink" title="BPNN"></a>BPNN</h1><pre><code>神经网络是一种运算模型，由大量的节点（或称神经元）之间相互联接构成。
+每个节点代表一种特定的输出函数，称为激励函数（activation function）。
+每两个节点间的连接都代表一个对于通过该连接信号的加权值，称之为权重，这相当于人工神经网络的记忆。
+网络的输出则依网络的连接方式，权重值和激励函数的不同而不同。
+而网络自身通常都是对自然界某种算法或者函数的逼近，也可能是对一种逻辑策略的表达。
+
+神经网络主要有以下几种类型: 前向型、反馈型、随机型和竞争型。
+BPNN,Back Propagation Neural Network,属于前向型。
+前向型:
+    前馈神经网络是指神经元分层排列，由输入层，隐藏层和输出层构成，其中隐藏层可能会有多层。
+    这种神经网络的每一层的神经元只接受前一层神经元的输入，后面的层对于前面的层没有信号反馈。
+    每一层对于输入数据进行一定的转换，然后将输出结果作为下一层的输入，直到最后输出结果。
+</code></pre>
+<span id="more"></span>
+<h1 id="In-action"><a href="#In-action" class="headerlink" title="In action"></a>In action</h1><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br><span class="line">181</span><br><span class="line">182</span><br><span class="line">183</span><br><span class="line">184</span><br><span class="line">185</span><br><span class="line">186</span><br><span class="line">187</span><br><span class="line">188</span><br><span class="line">189</span><br><span class="line">190</span><br><span class="line">191</span><br><span class="line">192</span><br><span class="line">193</span><br><span class="line">194</span><br><span class="line">195</span><br><span class="line">196</span><br><span class="line">197</span><br><span class="line">198</span><br><span class="line">199</span><br><span class="line">200</span><br><span class="line">201</span><br><span class="line">202</span><br><span class="line">203</span><br><span class="line">204</span><br><span class="line">205</span><br><span class="line">206</span><br><span class="line">207</span><br><span class="line">208</span><br><span class="line">209</span><br><span class="line">210</span><br><span class="line">211</span><br><span class="line">212</span><br><span class="line">213</span><br><span class="line">214</span><br><span class="line">215</span><br><span class="line">216</span><br><span class="line">217</span><br><span class="line">218</span><br><span class="line">219</span><br><span class="line">220</span><br><span class="line">221</span><br><span class="line">222</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#!/usr/bin/env python</span></span><br><span class="line"><span class="comment"># -*- coding: utf-8 -*-</span></span><br><span class="line"><span class="comment"># Created by PyCharm</span></span><br><span class="line"><span class="comment"># @author  : mystic</span></span><br><span class="line"><span class="comment"># @date    : 2017/11/23 8:41</span></span><br><span class="line"><span class="keyword">import</span> datetime</span><br><span class="line"><span class="keyword">import</span> math</span><br><span class="line"><span class="keyword">import</span> pickle</span><br><span class="line"><span class="keyword">import</span> random</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">rand</span>(<span class="params">a, b</span>):</span></span><br><span class="line">    <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">        生成[a,b)区间内的随机数</span></span><br><span class="line"><span class="string">    :param a:</span></span><br><span class="line"><span class="string">    :param b:</span></span><br><span class="line"><span class="string">    :return:</span></span><br><span class="line"><span class="string">    &quot;&quot;&quot;</span></span><br><span class="line">    <span class="keyword">return</span> (b - a) * random.random() + a</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">make_matrix</span>(<span class="params">m, n, fill=<span class="number">0.</span></span>):</span></span><br><span class="line">    <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">        生成m*n的矩阵,默认是零矩阵</span></span><br><span class="line"><span class="string">    :param m:</span></span><br><span class="line"><span class="string">    :param n:</span></span><br><span class="line"><span class="string">    :param fill:</span></span><br><span class="line"><span class="string">    :return:</span></span><br><span class="line"><span class="string">    &quot;&quot;&quot;</span></span><br><span class="line">    matrix = []</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(m):</span><br><span class="line">        matrix.append([fill] * n)</span><br><span class="line">    <span class="keyword">return</span> matrix</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">sigmoid</span>(<span class="params">x</span>):</span></span><br><span class="line">    <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">        S型函数:Log-sigmoid和Tan-sigmoid[这里采用Log-sigmoid]</span></span><br><span class="line"><span class="string">    :param x:</span></span><br><span class="line"><span class="string">    :return:</span></span><br><span class="line"><span class="string">    &quot;&quot;&quot;</span></span><br><span class="line">    <span class="keyword">return</span> <span class="number">1.0</span> / (<span class="number">1.0</span> + math.exp(-x))</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">sigmoid_derivative</span>(<span class="params">x</span>):</span></span><br><span class="line">    <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">        S型函数Log-sigmoid的导数</span></span><br><span class="line"><span class="string">    :param x:</span></span><br><span class="line"><span class="string">    :return:</span></span><br><span class="line"><span class="string">    &quot;&quot;&quot;</span></span><br><span class="line">    <span class="keyword">return</span> x * (<span class="number">1</span> - x)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">BPNeuralNetwork</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span>(<span class="params">self</span>):</span></span><br><span class="line">        self.input_node = <span class="number">0</span></span><br><span class="line">        self.hidden_node = <span class="number">0</span></span><br><span class="line">        self.output_node = <span class="number">0</span></span><br><span class="line">        self.input_cells = []</span><br><span class="line">        self.hidden_cells = []</span><br><span class="line">        self.output_cells = []</span><br><span class="line">        self.input_weights = []</span><br><span class="line">        self.output_weights = []</span><br><span class="line">        self.input_correction = []</span><br><span class="line">        self.output_correction = []</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">setup</span>(<span class="params">self, ni, nh, no</span>):</span></span><br><span class="line">        <span class="comment"># 输入层、隐藏层、输出层的节点(数)</span></span><br><span class="line">        self.input_node = ni + <span class="number">1</span>  <span class="comment"># 增加一个偏差节点</span></span><br><span class="line">        self.hidden_node = nh</span><br><span class="line">        self.output_node = no</span><br><span class="line">        <span class="comment"># init cells 激活神经网络的所有节点</span></span><br><span class="line">        self.input_cells = [<span class="number">1.0</span>] * self.input_node</span><br><span class="line">        self.hidden_cells = [<span class="number">1.0</span>] * self.hidden_node</span><br><span class="line">        self.output_cells = [<span class="number">1.0</span>] * self.output_node</span><br><span class="line">        <span class="comment"># init weights 建立输入层到隐含层权重和隐含层到输出层的权重</span></span><br><span class="line">        self.input_weights = make_matrix(self.input_node, self.hidden_node)</span><br><span class="line">        self.output_weights = make_matrix(self.hidden_node, self.output_node)</span><br><span class="line">        <span class="comment"># random activate</span></span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(self.input_node):</span><br><span class="line">            <span class="keyword">for</span> h <span class="keyword">in</span> <span class="built_in">range</span>(self.hidden_node):</span><br><span class="line">                self.input_weights[i][h] = rand(-<span class="number">0.2</span>, <span class="number">0.2</span>)</span><br><span class="line">        <span class="keyword">for</span> h <span class="keyword">in</span> <span class="built_in">range</span>(self.hidden_node):</span><br><span class="line">            <span class="keyword">for</span> o <span class="keyword">in</span> <span class="built_in">range</span>(self.output_node):</span><br><span class="line">                self.output_weights[h][o] = rand(-<span class="number">2.0</span>, <span class="number">2.0</span>)</span><br><span class="line">        <span class="comment"># init correction matrix 建立动量因子</span></span><br><span class="line">        self.input_correction = make_matrix(self.input_node, self.hidden_node)</span><br><span class="line">        self.output_correction = make_matrix(self.hidden_node, self.output_node)</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">predict</span>(<span class="params">self, inputs</span>):</span></span><br><span class="line">        <span class="comment"># activate input layer</span></span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(self.input_node - <span class="number">1</span>):</span><br><span class="line">            self.input_cells[i] = inputs[i]</span><br><span class="line">        <span class="comment"># activate hidden layer</span></span><br><span class="line">        <span class="keyword">for</span> j <span class="keyword">in</span> <span class="built_in">range</span>(self.hidden_node):</span><br><span class="line">            total = <span class="number">0.0</span></span><br><span class="line">            <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(self.input_node):</span><br><span class="line">                total += self.input_cells[i] * self.input_weights[i][j]</span><br><span class="line">            self.hidden_cells[j] = sigmoid(total)</span><br><span class="line">        <span class="comment"># activate output layer</span></span><br><span class="line">        <span class="keyword">for</span> k <span class="keyword">in</span> <span class="built_in">range</span>(self.output_node):</span><br><span class="line">            total = <span class="number">0.0</span></span><br><span class="line">            <span class="keyword">for</span> j <span class="keyword">in</span> <span class="built_in">range</span>(self.hidden_node):</span><br><span class="line">                total += self.hidden_cells[j] * self.output_weights[j][k]</span><br><span class="line">            self.output_cells[k] = sigmoid(total)</span><br><span class="line">        <span class="keyword">return</span> self.output_cells[:]</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">back_propagation</span>(<span class="params">self, case, label, learn, correct</span>):</span></span><br><span class="line">        <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">            反向传播</span></span><br><span class="line"><span class="string">        :param case: 样本</span></span><br><span class="line"><span class="string">        :param label: 期望样本输出值</span></span><br><span class="line"><span class="string">        :param learn: 学习速率</span></span><br><span class="line"><span class="string">        :param correct: 动量因子</span></span><br><span class="line"><span class="string">        :return:</span></span><br><span class="line"><span class="string">        &quot;&quot;&quot;</span></span><br><span class="line">        <span class="comment"># feed forward</span></span><br><span class="line">        self.predict(case)</span><br><span class="line">        <span class="comment"># get output layer error</span></span><br><span class="line">        output_deltas = [<span class="number">0.0</span>] * self.output_node</span><br><span class="line">        <span class="keyword">for</span> o <span class="keyword">in</span> <span class="built_in">range</span>(self.output_node):</span><br><span class="line">            error = label[o] - self.output_cells[o]</span><br><span class="line">            output_deltas[o] = sigmoid_derivative(self.output_cells[o]) * error</span><br><span class="line">        <span class="comment"># get hidden layer error</span></span><br><span class="line">        hidden_deltas = [<span class="number">0.0</span>] * self.hidden_node</span><br><span class="line">        <span class="keyword">for</span> h <span class="keyword">in</span> <span class="built_in">range</span>(self.hidden_node):</span><br><span class="line">            error = <span class="number">0.0</span></span><br><span class="line">            <span class="keyword">for</span> o <span class="keyword">in</span> <span class="built_in">range</span>(self.output_node):</span><br><span class="line">                error += output_deltas[o] * self.output_weights[h][o]</span><br><span class="line">            hidden_deltas[h] = sigmoid_derivative(self.hidden_cells[h]) * error</span><br><span class="line">        <span class="comment"># update output weights</span></span><br><span class="line">        <span class="keyword">for</span> h <span class="keyword">in</span> <span class="built_in">range</span>(self.hidden_node):</span><br><span class="line">            <span class="keyword">for</span> o <span class="keyword">in</span> <span class="built_in">range</span>(self.output_node):</span><br><span class="line">                change = output_deltas[o] * self.hidden_cells[h]</span><br><span class="line">                self.output_weights[h][o] += learn * change + correct * self.output_correction[h][o]</span><br><span class="line">                self.output_correction[h][o] = change</span><br><span class="line">        <span class="comment"># update input weights</span></span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(self.input_node):</span><br><span class="line">            <span class="keyword">for</span> h <span class="keyword">in</span> <span class="built_in">range</span>(self.hidden_node):</span><br><span class="line">                change = hidden_deltas[h] * self.input_cells[i]</span><br><span class="line">                self.input_weights[i][h] += learn * change + correct * self.input_correction[i][h]</span><br><span class="line">                self.input_correction[i][h] = change</span><br><span class="line">        <span class="comment"># get global error</span></span><br><span class="line">        error = <span class="number">0.0</span></span><br><span class="line">        <span class="keyword">for</span> o <span class="keyword">in</span> <span class="built_in">range</span>(<span class="built_in">len</span>(label)):</span><br><span class="line">            error += <span class="number">0.5</span> * (label[o] - self.output_cells[o]) ** <span class="number">2</span></span><br><span class="line">        <span class="keyword">return</span> error</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">train</span>(<span class="params">self, cases, labels, limit=<span class="number">10000</span>, learn=<span class="number">0.05</span>, correct=<span class="number">0.1</span></span>):</span></span><br><span class="line">        <span class="keyword">for</span> j <span class="keyword">in</span> <span class="built_in">range</span>(limit):</span><br><span class="line">            error = <span class="number">0.0</span></span><br><span class="line">            <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="built_in">len</span>(cases)):</span><br><span class="line">                label = labels[i]</span><br><span class="line">                case = cases[i]</span><br><span class="line">                error += self.back_propagation(case, label, learn, correct)</span><br><span class="line">        <span class="comment"># 返回训练好的权重、动量因子等信息，便于BP网络的保存</span></span><br><span class="line">        <span class="keyword">return</span> <span class="built_in">dict</span>(input_node=self.input_node, hidden_node=self.hidden_node, output_node=self.output_node,</span><br><span class="line">                    input_cells=self.input_cells, hidden_cells=self.hidden_cells, output_cells=self.output_cells,</span><br><span class="line">                    input_weights=self.input_weights, output_weights=self.output_weights,</span><br><span class="line">                    input_correction=self.input_correction, output_correction=self.output_correction)</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">test</span>(<span class="params">self</span>):</span></span><br><span class="line">        cases = [</span><br><span class="line">            [<span class="number">0</span>, <span class="number">0.321</span>, <span class="number">0</span>, <span class="number">0.54</span>, <span class="number">0.337</span>, <span class="number">0.43</span>, <span class="number">0.64</span>, <span class="number">0</span>, <span class="number">0.618</span>, <span class="number">0.25</span>, <span class="number">0.36</span>, <span class="number">0.321</span>, <span class="number">0</span>, <span class="number">0.54</span>, <span class="number">0.337</span>, <span class="number">0.43</span>, <span class="number">0.64</span>, <span class="number">0</span>, <span class="number">0.618</span>,</span><br><span class="line">             <span class="number">0.25</span>, <span class="number">0.374</span>],</span><br><span class="line">            [<span class="number">0</span>, <span class="number">0.43</span>, <span class="number">0.39</span>, <span class="number">0.43</span>, <span class="number">0</span>, <span class="number">0.43</span>, <span class="number">0.55</span>, <span class="number">0.61</span>, <span class="number">0.21</span>, <span class="number">1</span>, <span class="number">0</span>, <span class="number">0.43</span>, <span class="number">0.39</span>, <span class="number">0.43</span>, <span class="number">0</span>, <span class="number">0.43</span>, <span class="number">0.55</span>, <span class="number">0.61</span>, <span class="number">0.21</span>, <span class="number">1</span>,</span><br><span class="line">             <span class="number">0.21</span>],</span><br><span class="line">            [<span class="number">0</span>, <span class="number">1</span>, <span class="number">0.66</span>, <span class="number">0</span>, <span class="number">0.13</span>, <span class="number">0.54</span>, <span class="number">0.32</span>, <span class="number">0.33</span>, <span class="number">0.25</span>, <span class="number">0.34</span>, <span class="number">0.52</span>, <span class="number">1</span>, <span class="number">0.66</span>, <span class="number">0</span>, <span class="number">0.13</span>, <span class="number">0.54</span>, <span class="number">0.32</span>, <span class="number">0.33</span>, <span class="number">0.25</span>, <span class="number">0.34</span>,</span><br><span class="line">             <span class="number">0.86</span>],</span><br><span class="line">            [<span class="number">0.81</span>, <span class="number">0.31</span>, <span class="number">0.23</span>, <span class="number">0.12</span>, <span class="number">0.32</span>, <span class="number">0.15</span>, <span class="number">0.56</span>, <span class="number">0.12</span>, <span class="number">0.33</span>, <span class="number">0.33</span>, <span class="number">0.42</span>, <span class="number">0.31</span>, <span class="number">0.23</span>, <span class="number">0.12</span>, <span class="number">0.32</span>, <span class="number">0.15</span>, <span class="number">0.56</span>, <span class="number">0.12</span>,</span><br><span class="line">             <span class="number">0.33</span>, <span class="number">0.33</span>, <span class="number">0.321</span>],</span><br><span class="line">            [<span class="number">0.61</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0.52</span>, <span class="number">0.55</span>, <span class="number">0.56</span>, <span class="number">0.25</span>, <span class="number">1</span>, <span class="number">1</span>, <span class="number">0</span>, <span class="number">0.76</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0.52</span>, <span class="number">0.55</span>, <span class="number">0.56</span>, <span class="number">0.25</span>, <span class="number">1</span>,</span><br><span class="line">             <span class="number">1</span>, <span class="number">0</span>, <span class="number">0.62</span>],</span><br><span class="line">            [<span class="number">0.37</span>, <span class="number">0</span>, <span class="number">1</span>, <span class="number">0.832</span>, <span class="number">0.643</span>, <span class="number">0.931</span>, <span class="number">0.821</span>, <span class="number">0.21</span>, <span class="number">0.235</span>, <span class="number">0.841</span>, <span class="number">0.213</span>, <span class="number">0</span>, <span class="number">1</span>, <span class="number">0.832</span>, <span class="number">0.643</span>, <span class="number">0.931</span>, <span class="number">0.821</span>, <span class="number">0.21</span>,</span><br><span class="line">             <span class="number">0.235</span>, <span class="number">0.841</span>, <span class="number">0.87</span>],</span><br><span class="line">            [<span class="number">0.42</span>, <span class="number">0.41</span>, <span class="number">0.32</span>, <span class="number">0.451</span>, <span class="number">0.324</span>, <span class="number">1</span>, <span class="number">0</span>, <span class="number">0.543</span>, <span class="number">0.328</span>, <span class="number">0.642</span>, <span class="number">0.872</span>, <span class="number">0.41</span>, <span class="number">0.32</span>, <span class="number">0.451</span>, <span class="number">0.324</span>, <span class="number">1</span>, <span class="number">0</span>, <span class="number">0.543</span>,</span><br><span class="line">             <span class="number">0.328</span>, <span class="number">0.642</span>, <span class="number">0.76</span>],</span><br><span class="line">            [<span class="number">0</span>, <span class="number">0.56</span>, <span class="number">0.43</span>, <span class="number">0.872</span>, <span class="number">0.432</span>, <span class="number">0.683</span>, <span class="number">0.5</span>, <span class="number">1</span>, <span class="number">0.52</span>, <span class="number">0.9</span>, <span class="number">0.42</span>, <span class="number">0.56</span>, <span class="number">0.43</span>, <span class="number">0.872</span>, <span class="number">0.432</span>, <span class="number">0.683</span>, <span class="number">0.5</span>, <span class="number">1</span>,</span><br><span class="line">             <span class="number">0.52</span>, <span class="number">0.9</span>, <span class="number">0.911</span>],</span><br><span class="line">            [<span class="number">0</span>, <span class="number">0.54</span>, <span class="number">0.62</span>, <span class="number">1</span>, <span class="number">0.24</span>, <span class="number">0.317</span>, <span class="number">0.58</span>, <span class="number">0.82</span>, <span class="number">0.432</span>, <span class="number">0.12</span>, <span class="number">0.9</span>, <span class="number">0.54</span>, <span class="number">0.62</span>, <span class="number">1</span>, <span class="number">0.24</span>, <span class="number">0.317</span>, <span class="number">0.58</span>, <span class="number">0.82</span>,</span><br><span class="line">             <span class="number">0.432</span>, <span class="number">0.12</span>, <span class="number">0.62</span>],</span><br><span class="line">            [<span class="number">1</span>, <span class="number">1</span>, <span class="number">0</span>, <span class="number">0.231</span>, <span class="number">0.321</span>, <span class="number">0.43</span>, <span class="number">0.42</span>, <span class="number">0.21</span>, <span class="number">0.56</span>, <span class="number">0.21</span>, <span class="number">0.661</span>, <span class="number">1</span>, <span class="number">0</span>, <span class="number">0.231</span>, <span class="number">0.321</span>, <span class="number">0.43</span>, <span class="number">0.42</span>, <span class="number">0.21</span>,</span><br><span class="line">             <span class="number">0.56</span>, <span class="number">0.21</span>, <span class="number">0.668</span>]</span><br><span class="line">        ]</span><br><span class="line">        labels = [[<span class="number">0.257</span>], [<span class="number">0.473</span>], [<span class="number">0.261</span>], [<span class="number">0.561</span>], [<span class="number">0.201</span>], [<span class="number">0.681</span>], [<span class="number">0.697</span>], [<span class="number">0.733</span>], [<span class="number">0.375</span>], [<span class="number">0.583</span>]]</span><br><span class="line">        self.setup(<span class="number">21</span>, <span class="number">4</span>, <span class="number">1</span>)</span><br><span class="line">        begin = datetime.datetime.now()</span><br><span class="line">        save_net = self.train(cases, labels, <span class="number">1000000</span>, <span class="number">0.1</span>, <span class="number">0.1</span>)</span><br><span class="line">        end = datetime.datetime.now()</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">&#x27;spend:&#x27;</span>, (end - begin))</span><br><span class="line">        <span class="comment"># 保存网络</span></span><br><span class="line">        <span class="comment"># with open(&#x27;resource/bp_net.txt&#x27;, &#x27;wb&#x27;) as fw:</span></span><br><span class="line">        <span class="comment">#     pickle.dump(save_net, fw, 0)</span></span><br><span class="line">        <span class="keyword">for</span> case <span class="keyword">in</span> cases:</span><br><span class="line">            <span class="built_in">print</span>(self.predict(case))</span><br><span class="line">            <span class="comment"># print(self.predict(</span></span><br><span class="line">            <span class="comment">#     [1, 1, 1, 0.75, 0.833, 0.688, 0.858, 0.63, 0.859, 0, 0.322, 0.875,</span></span><br><span class="line">            <span class="comment"># 1, 0, 1, 1, 0.5, 0.834, 0.376, 0.233,1]))</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&#x27;__main__&#x27;</span>:</span><br><span class="line">    nn = BPNeuralNetwork()</span><br><span class="line">    <span class="comment"># nn.test()</span></span><br><span class="line">    <span class="comment"># 加载网络</span></span><br><span class="line">    trained_net = <span class="literal">None</span></span><br><span class="line">    <span class="keyword">with</span> <span class="built_in">open</span>(<span class="string">&#x27;resource/bp_net.txt&#x27;</span>, <span class="string">&#x27;rb&#x27;</span>) <span class="keyword">as</span> fr:</span><br><span class="line">        trained_net = pickle.load(fr)</span><br><span class="line">    nn.input_node = trained_net[<span class="string">&#x27;input_node&#x27;</span>]</span><br><span class="line">    nn.hidden_node = trained_net[<span class="string">&#x27;hidden_node&#x27;</span>]</span><br><span class="line">    nn.output_node = trained_net[<span class="string">&#x27;output_node&#x27;</span>]</span><br><span class="line">    nn.input_cells = trained_net[<span class="string">&#x27;input_cells&#x27;</span>]</span><br><span class="line">    nn.hidden_cells = trained_net[<span class="string">&#x27;hidden_cells&#x27;</span>]</span><br><span class="line">    nn.output_cells = trained_net[<span class="string">&#x27;output_cells&#x27;</span>]</span><br><span class="line">    nn.input_weights = trained_net[<span class="string">&#x27;input_weights&#x27;</span>]</span><br><span class="line">    nn.output_weights = trained_net[<span class="string">&#x27;output_weights&#x27;</span>]</span><br><span class="line">    nn.input_correction = trained_net[<span class="string">&#x27;input_correction&#x27;</span>]</span><br><span class="line">    nn.output_correction = trained_net[<span class="string">&#x27;output_correction&#x27;</span>]</span><br><span class="line">    predict_value = nn.predict(</span><br><span class="line">        [<span class="number">1</span>, <span class="number">1</span>, <span class="number">0</span>, <span class="number">0.231</span>, <span class="number">0.321</span>, <span class="number">0.43</span>, <span class="number">0.42</span>, <span class="number">0.21</span>, <span class="number">0.56</span>, <span class="number">0.21</span>, <span class="number">0.661</span>, <span class="number">1</span>, <span class="number">0</span>, <span class="number">0.231</span>, <span class="number">0.321</span>, <span class="number">0.43</span>, <span class="number">0.42</span>, <span class="number">0.21</span>,</span><br><span class="line">         <span class="number">0.56</span>, <span class="number">0.21</span>, <span class="number">0.668</span>])</span><br><span class="line">    <span class="built_in">print</span>(predict_value)</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<h1 id="Something-worth-noting"><a href="#Something-worth-noting" class="headerlink" title="Something worth noting"></a>Something worth noting</h1><p><a target="_blank" rel="noopener" href="https://github.com/pplmx/MachineLearning.git">Github Source Code</a></p>
+
+    </div>
+
+    
+    
+    
+      
+  <div class="popular-posts-header">Related Posts</div>
+  <ul class="popular-posts">
+    <li class="popular-posts-item">
+      <div class="popular-posts-title"><a href="/decision-tree.html" rel="bookmark">决策树算法(python实现)</a></div>
+    </li>
+    <li class="popular-posts-item">
+      <div class="popular-posts-title"><a href="/kNN.html" rel="bookmark">kNN分类算法(python实现)</a></div>
+    </li>
+    <li class="popular-posts-item">
+      <div class="popular-posts-title"><a href="/classmethod-staticmethod.html" rel="bookmark">Let's understand class and static method in Python for a Java-er</a></div>
+    </li>
+    <li class="popular-posts-item">
+      <div class="popular-posts-title"><a href="/copy-list-python.html" rel="bookmark">How to Copy a List in Python</a></div>
+    </li>
+    <li class="popular-posts-item">
+      <div class="popular-posts-title"><a href="/install-multi-version-python.html" rel="bookmark">Let's install multiple python versions in linux</a></div>
+    </li>
+  </ul>
+
+
+    <footer class="post-footer">
+          
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>Post author:  </strong>紫玄
+  </li>
+  <li class="post-copyright-link">
+      <strong>Post link: </strong>
+      <a href="https://blog.caoyu.info/bpnn.html" title="BP神经网络算法(python实现)">https://blog.caoyu.info/bpnn.html</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>Copyright Notice:  </strong>All articles in this blog are licensed under <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> unless stating additionally.
+  </li>
+</ul>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/python/" rel="tag"># python</a>
+              <a href="/tags/classification/" rel="tag"># classification</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/kNN.html" rel="prev" title="kNN分类算法(python实现)">
+                  <i class="fa fa-chevron-left"></i> kNN分类算法(python实现)
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/decision-tree.html" rel="next" title="决策树算法(python实现)">
+                  决策树算法(python实现) <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+      <div class="tabs tabs-comment">
+        <ul class="nav-tabs">
+            <li class="tab"><a href="#comment-gitalk">gitalk</a></li>
+            <li class="tab"><a href="#comment-livere">livere</a></li>
+        </ul>
+        <div class="tab-content">
+            <div class="tab-pane gitalk" id="comment-gitalk">
+              <div class="comments gitalk-container"></div>
+            </div>
+            <div class="tab-pane livere" id="comment-livere">
+              <div class="comments" id="lv-container" data-id="city" data-uid="MTAyMC8zMTUxNC84MDc4"></div>
+            </div>
+        </div>
+      </div>
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+
+<div class="copyright">
+  &copy; 2017 – 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">紫玄</span>
+</div>
+<div class="wordcount">
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-line"></i>
+    </span>
+    <span title="Symbols count total">259k</span>
+  </span>
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="Reading time total">3:55</span>
+  </span>
+</div>
+<div class="busuanzi-count">
+    <span class="post-meta-item" id="busuanzi_container_site_uv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="Total Visitors">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="Total Views">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/" rel="noopener" target="_blank">NexT.Gemini</a>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <script size="300" alpha="0.6" zIndex="-1" src="https://cdn.jsdelivr.net/npm/ribbon.js@1.0.2/dist/ribbon.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/animejs@3.2.1/lib/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@next-theme/pjax@0.5.0/pjax.min.js" integrity="sha256-3NkoLDrmHLTYj7csHIZSr0MHAFTXth7Ua/DDt4MRUAg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js" integrity="sha256-yt2kYMy0w8AbtF89WXb2P1rfjcP/HTHLT7097U8Y5b8=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/next-boot.js"></script><script src="/js/pjax.js"></script>
+
+  
+<script src="/js/third-party/search/local-search.js"></script>
+
+
+
+
+  
+  <script data-pjax async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+  <script src="https://cdn.jsdelivr.net/npm/quicklink@2.1.0/dist/quicklink.umd.js" integrity="sha256-KK3rvmDcW72MSl9jzzNZWlQjZNrRzAuGhAQ+0SFOg7Q=" crossorigin="anonymous"></script>
+  <script class="next-config" data-name="quicklink" type="application/json">{"enable":true,"home":false,"archive":false,"delay":true,"timeout":3000,"priority":true,"url":"https://blog.caoyu.info/bpnn.html"}</script>
+  <script src="/js/third-party/quicklink.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk@1.7.2/dist/gitalk.css" integrity="sha256-AJnUHL7dBv6PGaeyPQJcgQPDjt/Hn/PvYZde1iqfp8U=" crossorigin="anonymous">
+
+<script class="next-config" data-name="gitalk" type="application/json">{"enable":true,"github_id":"pplmx","repo":"pplmx.github.io","client_id":"f5c8e58699676e488ffd","client_secret":"b5d0d121e0a3ce54fcd43d7e0b80811397047ab8","admin_user":"pplmx","distraction_free_mode":true,"proxy":"https://cors-anywhere.azm.workers.dev/https://github.com/login/oauth/access_token","language":null,"js":{"url":"https://cdn.jsdelivr.net/npm/gitalk@1.7.2/dist/gitalk.min.js","integrity":"sha256-Pmj85ojLaPOWwRtlMJwmezB/Qg8BzvJp5eTzvXaYAfA="},"path_md5":"bd444be6567e66dff9d8e94bd489c8a3"}</script>
+<script src="/js/third-party/comments/gitalk.js"></script>
+<script src="/js/third-party/comments/livere.js"></script>
+
+<script>
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('/sw.js');
+  });
+}
+</script>
+
+</body>
+</html>

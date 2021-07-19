@@ -1,0 +1,6 @@
+# hexo robots.txt
+User-agent: *
+Allow: /
+
+Sitemap: https://blog.caoyu.info/sitemap.xml
+Sitemap: https://blog.caoyu.info/baidusitemap.xml

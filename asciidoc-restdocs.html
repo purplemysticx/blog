@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/favicon/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon.png">
+  <link rel="mask-icon" href="/images/favicon/safari-pinned-tab.svg" color="#222">
+  <link rel="manifest" href="/pwa.webmanifest">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.15.3/css/all.min.css" integrity="sha256-2H3fkXt6FEmrReK448mDVGKb3WW2ZZw35gI7vqHOE4Y=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" integrity="sha256-Vzbj7sDDS/woiFS3uNKo8eIuni59rjyNGtXfstRzStA=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"blog.caoyu.info","root":"/","images":"/images","scheme":"Gemini","version":"8.5.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":true,"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":"gitalk","storage":true,"lazyload":false,"nav":{"gitalk":{"order":-3},"livere":{"order":-1}},"activeClass":"gitalk"},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js"></script>
+<meta name="description" content="integrate asciidoc with spring restdocs">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Asciidoc with Spring Restdocs">
+<meta property="og:url" content="https://blog.caoyu.info/asciidoc-restdocs.html">
+<meta property="og:site_name" content="我还是个宝宝!">
+<meta property="og:description" content="integrate asciidoc with spring restdocs">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://blog.caoyu.info/assets/20200427131513411.png">
+<meta property="article:published_time" content="2020-04-27T15:02:01.000Z">
+<meta property="article:modified_time" content="2020-04-28T15:44:02.000Z">
+<meta property="article:author" content="紫玄">
+<meta property="article:tag" content="spring">
+<meta property="article:tag" content="springboot">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://blog.caoyu.info/assets/20200427131513411.png">
+
+
+<link rel="canonical" href="https://blog.caoyu.info/asciidoc-restdocs.html">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"en","comments":true,"permalink":"https://blog.caoyu.info/asciidoc-restdocs.html","path":"asciidoc-restdocs.html","title":"Asciidoc with Spring Restdocs"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>Asciidoc with Spring Restdocs | 我还是个宝宝!</title>
+  
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-108245491-2"></script>
+  <script class="next-config" data-name="google_analytics" type="application/json">{"tracking_id":"UA-108245491-2","only_pageview":false}</script>
+  <script src="/js/third-party/analytics/google-analytics.js"></script>
+
+  <script src="/js/third-party/analytics/baidu-analytics.js"></script>
+  <script async src="https://hm.baidu.com/hm.js?a621e40868a1043f41f060107790c2ff"></script>
+
+
+<link rel="manifest" href="/pwa.webmanifest" />
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+<link rel="alternate" href="/atom.xml" title="我还是个宝宝!" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <h1 class="site-title">我还是个宝宝!</h1>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">宝宝,就是我,耶~</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu">
+        <li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a></li>
+        <li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a></li>
+        <li class="menu-item menu-item-messages"><a href="/messages/" rel="section"><i class="fa fa-comments fa-fw"></i>messages</a></li>
+        <li class="menu-item menu-item-friends"><a href="/friends/" rel="section"><i class="fas fa-user-friends fa-fw"></i>friends</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup"><div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off" maxlength="80"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close" role="button">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="search-result-container no-result">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+        
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Integrate-Asciidoc-with-Spring-Restdocs"><span class="nav-number">1.</span> <span class="nav-text">Integrate Asciidoc with Spring Restdocs</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Preconditon"><span class="nav-number">1.1.</span> <span class="nav-text">Preconditon</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Configuration"><span class="nav-number">1.2.</span> <span class="nav-text">Configuration</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#common-config"><span class="nav-number">1.2.1.</span> <span class="nav-text">common config</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#create-docs-asciidoc-directory"><span class="nav-number">1.2.2.</span> <span class="nav-text">create docs&#x2F;asciidoc&#x2F; directory</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#index-adoc-amp-updateUser-adoc-e-g"><span class="nav-number">1.2.3.</span> <span class="nav-text">index.adoc &amp; updateUser.adoc(e.g.)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Other-solution"><span class="nav-number">1.2.4.</span> <span class="nav-text">Other solution</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Unit-Tests"><span class="nav-number">1.3.</span> <span class="nav-text">Unit Tests</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Source-Code"><span class="nav-number">1.4.</span> <span class="nav-text">Source Code</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-overview">
+            <div class="site-author site-overview-item animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="紫玄"
+      src="/images/favicon.png">
+  <p class="site-author-name" itemprop="name">紫玄</p>
+  <div class="site-description" itemprop="description">To infinity and beyond</div>
+</div>
+<div class="site-state-wrap site-overview-item animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">80</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+        <span class="site-state-item-count">12</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+        <span class="site-state-item-count">63</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="cc-license site-overview-item animated" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" class="cc-opacity" rel="noopener" target="_blank"><img src="https://cdn.jsdelivr.net/npm/@creativecommons/vocabulary@2020.11.3/assets/license_badges/small/by_nc_sa.svg" alt="Creative Commons"></a>
+  </div>
+
+
+  <div class="links-of-blogroll site-overview-item animated">
+    <div class="links-of-blogroll-title"><i class="fa fa-globe fa-fw"></i>
+      Links
+    </div>
+    <ul class="links-of-blogroll-list">
+        <li class="links-of-blogroll-item">
+          <a href="https://caoyu.info/" title="https:&#x2F;&#x2F;caoyu.info" rel="noopener" target="_blank">紫玄</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://yoooo.fun/" title="https:&#x2F;&#x2F;yoooo.fun" rel="noopener" target="_blank">YooooFun</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://uuznn.cn/" title="https:&#x2F;&#x2F;uuznn.cn" rel="noopener" target="_blank">柚子部落</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://siwei.info/" title="https:&#x2F;&#x2F;siwei.info" rel="noopener" target="_blank">Wey - SIWEI</a>
+        </li>
+    </ul>
+  </div>
+
+          </div>
+        </div>
+    </div>
+  </aside>
+  <div class="sidebar-dimmer"></div>
+
+
+    </header>
+
+    
+  <div class="back-to-top" role="button" aria-label="Back to top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+  <a href="https://github.com/pplmx" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://blog.caoyu.info/asciidoc-restdocs.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/favicon.png">
+      <meta itemprop="name" content="紫玄">
+      <meta itemprop="description" content="To infinity and beyond">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="我还是个宝宝!">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Asciidoc with Spring Restdocs
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2020-04-27 15:02:01" itemprop="dateCreated datePublished" datetime="2020-04-27T15:02:01+00:00">2020-04-27</time>
+    </span>
+      <span class="post-meta-item">
+        <span class="post-meta-item-icon">
+          <i class="far fa-calendar-check"></i>
+        </span>
+        <span class="post-meta-item-text">Edited on</span>
+        <time title="Modified: 2020-04-28 15:44:02" itemprop="dateModified" datetime="2020-04-28T15:44:02+00:00">2020-04-28</time>
+      </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">In</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/java/" itemprop="url" rel="index"><span itemprop="name">java</span></a>
+        </span>
+    </span>
+
+  
+    <span class="post-meta-item" title="Views" id="busuanzi_container_page_pv">
+      <span class="post-meta-item-icon">
+        <i class="far fa-eye"></i>
+      </span>
+      <span class="post-meta-item-text">Views: </span>
+      <span id="busuanzi_value_page_pv"></span>
+    </span>
+      </div>
+      <div class="post-meta">
+    <span class="post-meta-item" title="Symbols count in article">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">Symbols count in article: </span>
+      <span>6.7k</span>
+    </span>
+    <span class="post-meta-item" title="Reading time">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">Reading time &asymp;</span>
+      <span>6 mins.</span>
+    </span>
+</div>
+
+            <div class="post-description">integrate asciidoc with spring restdocs</div>
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <h1 id="Integrate-Asciidoc-with-Spring-Restdocs"><a href="#Integrate-Asciidoc-with-Spring-Restdocs" class="headerlink" title="Integrate Asciidoc with Spring Restdocs"></a>Integrate Asciidoc with Spring Restdocs</h1><h2 id="Preconditon"><a href="#Preconditon" class="headerlink" title="Preconditon"></a>Preconditon</h2><p><strong>The following is based on Webflux</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">asciidoctor version: 3.2.0</span><br><span class="line">spring restdocs version: 2.0.4.RELEASE</span><br><span class="line">dependency management: gradle</span><br></pre></td></tr></table></figure>
+
+<p>Some asciidoctor knowledge:</p>
+<p>sourceDir: <code>src/docs/asciidoc</code></p>
+<p>outputDir: <code>$&#123;buildDir&#125;/docs/asciidoc</code></p>
+<h2 id="Configuration"><a href="#Configuration" class="headerlink" title="Configuration"></a>Configuration</h2><h3 id="common-config"><a href="#common-config" class="headerlink" title="common config"></a>common config</h3><p>The following config is not a complete configuration.</p>
+<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// plugins</span></span><br><span class="line">plugins &#123;</span><br><span class="line">    id <span class="string">&#x27;org.springframework.boot&#x27;</span> version <span class="string">&#x27;2.3.0.M4&#x27;</span></span><br><span class="line">    id <span class="string">&#x27;io.spring.dependency-management&#x27;</span> version <span class="string">&#x27;1.0.9.RELEASE&#x27;</span></span><br><span class="line">    id <span class="string">&#x27;java&#x27;</span></span><br><span class="line">    <span class="comment">/* for rest docs */</span></span><br><span class="line">    id <span class="string">&#x27;org.asciidoctor.jvm.convert&#x27;</span> version <span class="string">&#x27;3.2.0&#x27;</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">configurations &#123;</span><br><span class="line">    asciidoctorExtensions</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">ext &#123;</span><br><span class="line">    set(<span class="string">&#x27;snippetsDir&#x27;</span>, file(<span class="string">&#x27;build/generated-snippets&#x27;</span>))</span><br><span class="line">    set(<span class="string">&#x27;springRestdocsVersion&#x27;</span>, <span class="string">&#x27;2.0.4.RELEASE&#x27;</span>)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">dependencies &#123;</span><br><span class="line">    testImplementation(<span class="string">&#x27;org.springframework.boot:spring-boot-starter-test&#x27;</span>) &#123;</span><br><span class="line">        exclude <span class="attr">group:</span> <span class="string">&#x27;org.junit.vintage&#x27;</span>, <span class="attr">module:</span> <span class="string">&#x27;junit-vintage-engine&#x27;</span></span><br><span class="line">    &#125;</span><br><span class="line">    testImplementation <span class="string">&#x27;io.projectreactor:reactor-test&#x27;</span></span><br><span class="line">    <span class="comment">/* for rest docs */</span></span><br><span class="line">    testImplementation <span class="string">&quot;org.springframework.restdocs:spring-restdocs-webtestclient:$&#123;springRestdocsVersion&#125;&quot;</span></span><br><span class="line">    asciidoctorExtensions <span class="string">&quot;org.springframework.restdocs:spring-restdocs-asciidoctor:$&#123;springRestdocsVersion&#125;&quot;</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">test &#123;</span><br><span class="line">    outputs.dir snippetsDir</span><br><span class="line">    useJUnitPlatform()</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">asciidoctor &#123;</span><br><span class="line">    configurations <span class="string">&#x27;asciidoctorExtensions&#x27;</span></span><br><span class="line">    dependsOn test</span><br><span class="line">    attributes <span class="string">&#x27;snippets&#x27;</span>: snippetsDir</span><br><span class="line">    inputs.dir snippetsDir</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">bootJar &#123;</span><br><span class="line">    dependsOn asciidoctor</span><br><span class="line">    from(<span class="string">&quot;$&#123;asciidoctor.outputDir&#125;&quot;</span>) &#123;</span><br><span class="line">        into <span class="string">&#x27;static/docs&#x27;</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="create-docs-asciidoc-directory"><a href="#create-docs-asciidoc-directory" class="headerlink" title="create docs/asciidoc/ directory"></a>create docs/asciidoc/ directory</h3><p>like this</p>
+<p><img src="assets/20200427131513411.png" alt="directory_layout"></p>
+<h3 id="index-adoc-amp-updateUser-adoc-e-g"><a href="#index-adoc-amp-updateUser-adoc-e-g" class="headerlink" title="index.adoc &amp; updateUser.adoc(e.g.)"></a>index.adoc &amp; updateUser.adoc(e.g.)</h3><p>index.adoc</p>
+<figure class="highlight adoc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="section">= Blog Restful API</span></span><br><span class="line">Purple Mystic;</span><br><span class="line"><span class="meta">:toc:</span> left</span><br><span class="line"><span class="meta">:toc-title:</span> Chapter</span><br><span class="line"><span class="meta">:doctype:</span> book</span><br><span class="line"><span class="meta">:icons:</span> font</span><br><span class="line"><span class="meta">:source-highlighter:</span> highlightjs</span><br><span class="line"><span class="meta">:sourcedir:</span> &#123;sourcedir&#125;/user</span><br><span class="line"></span><br><span class="line">include::createUser.adoc[]</span><br><span class="line">include::updateUser.adoc[]</span><br><span class="line">include::findUserById.adoc[]</span><br><span class="line">include::findAllUsers.adoc[]</span><br></pre></td></tr></table></figure>
+
+<p>updateUser.adoc</p>
+<figure class="highlight adoc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="section">== *Backend: updateUser:*</span></span><br><span class="line"></span><br><span class="line"><span class="section">=== Curl request:</span></span><br><span class="line"></span><br><span class="line">include::&#123;snippets&#125;/updateUser/curl-request.adoc[]</span><br><span class="line"></span><br><span class="line"><span class="section">=== HTTP request:</span></span><br><span class="line"></span><br><span class="line">include::&#123;snippets&#125;/updateUser/http-request.adoc[]</span><br><span class="line"></span><br><span class="line"><span class="section">=== HTTP response:</span></span><br><span class="line"></span><br><span class="line">include::&#123;snippets&#125;/updateUser/http-response.adoc[]</span><br><span class="line"></span><br><span class="line"><span class="section">=== Request using HTTPie:</span></span><br><span class="line"></span><br><span class="line">include::&#123;snippets&#125;/updateUser/httpie-request.adoc[]</span><br><span class="line"></span><br><span class="line"><span class="section">=== Request body:</span></span><br><span class="line"></span><br><span class="line">include::&#123;snippets&#125;/updateUser/request-body.adoc[]</span><br><span class="line"></span><br><span class="line"><span class="section">=== Response body:</span></span><br><span class="line"></span><br><span class="line">include::&#123;snippets&#125;/updateUser/response-body.adoc[]</span><br></pre></td></tr></table></figure>
+
+<h3 id="Other-solution"><a href="#Other-solution" class="headerlink" title="Other solution"></a>Other solution</h3><ul>
+<li>  remove <code>:sourcedir: &#123;sourcedir&#125;/user</code> from index.adoc</li>
+<li>  reconfigure asciidoctor task in build.gradle, like this</li>
+</ul>
+<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">asciidoctor &#123;</span><br><span class="line">    configurations <span class="string">&#x27;asciidoctorExtensions&#x27;</span></span><br><span class="line">    dependsOn test</span><br><span class="line">    attributes <span class="string">&#x27;snippets&#x27;</span>: snippetsDir</span><br><span class="line">    inputs.dir snippetsDir</span><br><span class="line">    sources &#123;</span><br><span class="line">        include <span class="string">&#x27;**/index.adoc&#x27;</span></span><br><span class="line">    &#125;</span><br><span class="line">    baseDirFollowsSourceFile()</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="Unit-Tests"><a href="#Unit-Tests" class="headerlink" title="Unit Tests"></a>Unit Tests</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> team.star.blog.controller;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> org.junit.jupiter.api.BeforeEach;</span><br><span class="line"><span class="keyword">import</span> org.junit.jupiter.api.Test;</span><br><span class="line"><span class="keyword">import</span> org.junit.jupiter.api.extension.ExtendWith;</span><br><span class="line"><span class="keyword">import</span> org.mockito.Mockito;</span><br><span class="line"><span class="keyword">import</span> org.springframework.beans.factory.annotation.Autowired;</span><br><span class="line"><span class="keyword">import</span> org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest;</span><br><span class="line"><span class="keyword">import</span> org.springframework.boot.test.mock.mockito.MockBean;</span><br><span class="line"><span class="keyword">import</span> org.springframework.context.ApplicationContext;</span><br><span class="line"><span class="keyword">import</span> org.springframework.http.MediaType;</span><br><span class="line"><span class="keyword">import</span> org.springframework.restdocs.RestDocumentationContextProvider;</span><br><span class="line"><span class="keyword">import</span> org.springframework.restdocs.RestDocumentationExtension;</span><br><span class="line"><span class="keyword">import</span> org.springframework.test.web.reactive.server.WebTestClient;</span><br><span class="line"><span class="keyword">import</span> reactor.core.publisher.Flux;</span><br><span class="line"><span class="keyword">import</span> reactor.core.publisher.Mono;</span><br><span class="line"><span class="keyword">import</span> team.star.blog.pojo.User;</span><br><span class="line"><span class="keyword">import</span> team.star.blog.service.UserService;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.util.List;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> <span class="keyword">static</span> org.mockito.Mockito.when;</span><br><span class="line"><span class="keyword">import</span> <span class="keyword">static</span> org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint;</span><br><span class="line"><span class="keyword">import</span> <span class="keyword">static</span> org.springframework.restdocs.request.RequestDocumentation.parameterWithName;</span><br><span class="line"><span class="keyword">import</span> <span class="keyword">static</span> org.springframework.restdocs.request.RequestDocumentation.pathParameters;</span><br><span class="line"><span class="keyword">import</span> <span class="keyword">static</span> org.springframework.restdocs.webtestclient.WebTestClientRestDocumentation.document;</span><br><span class="line"><span class="keyword">import</span> <span class="keyword">static</span> org.springframework.restdocs.webtestclient.WebTestClientRestDocumentation.documentationConfiguration;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@author</span> mystic</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="meta">@WebFluxTest(UserController.class)</span></span><br><span class="line"><span class="meta">@ExtendWith(RestDocumentationExtension.class)</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">UserControllerTest</span> </span>&#123;</span><br><span class="line">    <span class="meta">@Autowired</span></span><br><span class="line">    <span class="keyword">private</span> ApplicationContext context;</span><br><span class="line">    <span class="keyword">private</span> WebTestClient client;</span><br><span class="line">    <span class="meta">@MockBean</span></span><br><span class="line">    <span class="keyword">private</span> UserService userService;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@BeforeEach</span></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">setUp</span><span class="params">(RestDocumentationContextProvider provider)</span> </span>&#123;</span><br><span class="line">        client = WebTestClient.bindToApplicationContext(context)</span><br><span class="line">                .configureClient()</span><br><span class="line">                .filter(</span><br><span class="line">                        documentationConfiguration(provider)</span><br><span class="line">                                .operationPreprocessors()</span><br><span class="line">                                .withRequestDefaults(prettyPrint())</span><br><span class="line">                                .withResponseDefaults(prettyPrint())</span><br><span class="line">                )</span><br><span class="line">                .build();</span><br><span class="line"></span><br><span class="line">        User u1 = User.builder().id(<span class="number">1</span>).name(<span class="string">&quot;Mystic&quot;</span>).build();</span><br><span class="line">        User u2 = User.builder().id(<span class="number">2</span>).name(<span class="string">&quot;Ran&quot;</span>).build();</span><br><span class="line"></span><br><span class="line">        when(userService.findAll()).thenReturn(Flux.fromIterable(List.of(u1, u2)));</span><br><span class="line">        when(userService.findById(Mockito.anyInt())).thenReturn(Mono.just(u1));</span><br><span class="line">        when(userService.save(Mockito.any(User.class))).thenReturn(Mono.just(u2));</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Test</span></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">findUserById</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        client.get().uri(<span class="string">&quot;/user/&#123;id&#125;&quot;</span>, <span class="number">1</span>)</span><br><span class="line">                .exchange()</span><br><span class="line">                .expectStatus().isOk()</span><br><span class="line">                .expectBody(User.class)</span><br><span class="line">                .consumeWith(document(<span class="string">&quot;findUserById&quot;</span>,</span><br><span class="line">                        pathParameters(parameterWithName(<span class="string">&quot;id&quot;</span>).description(<span class="string">&quot;User ID&quot;</span>))</span><br><span class="line">                ));</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Test</span></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">findAllUsers</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        client.get().uri(<span class="string">&quot;/user&quot;</span>).exchange()</span><br><span class="line">                .expectStatus().isOk()</span><br><span class="line">                .expectBodyList(User.class)</span><br><span class="line">                .consumeWith(document(<span class="string">&quot;findAllUsers&quot;</span>));</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Test</span></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">createUser</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        User u3 = User.builder().name(<span class="string">&quot;cc&quot;</span>).build();</span><br><span class="line">        client.post().uri(<span class="string">&quot;/user&quot;</span>)</span><br><span class="line">                .contentType(MediaType.APPLICATION_JSON)</span><br><span class="line">                .accept(MediaType.APPLICATION_JSON)</span><br><span class="line">                .body(Mono.just(u3), User.class)</span><br><span class="line">                .exchange()</span><br><span class="line">                .expectStatus().isCreated()</span><br><span class="line">                .expectBody()</span><br><span class="line">                .jsonPath(<span class="string">&quot;$.id&quot;</span>).isEqualTo(<span class="number">2</span>)</span><br><span class="line">                .consumeWith(document(<span class="string">&quot;createUser&quot;</span>));</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Test</span></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">updateUser</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        User u2 = User.builder().id(<span class="number">2</span>).name(<span class="string">&quot;cc&quot;</span>).build();</span><br><span class="line">        client.patch().uri(<span class="string">&quot;/user&quot;</span>)</span><br><span class="line">                .contentType(MediaType.APPLICATION_JSON)</span><br><span class="line">                .accept(MediaType.APPLICATION_JSON)</span><br><span class="line">                .body(Mono.just(u2), User.class)</span><br><span class="line">                .exchange()</span><br><span class="line">                .expectStatus().isOk()</span><br><span class="line">                .expectBody()</span><br><span class="line">                .jsonPath(<span class="string">&quot;$.name&quot;</span>).isEqualTo(<span class="string">&quot;Ran&quot;</span>)</span><br><span class="line">                .consumeWith(document(<span class="string">&quot;updateUser&quot;</span>));</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="Source-Code"><a href="#Source-Code" class="headerlink" title="Source Code"></a>Source Code</h2><p><a target="_blank" rel="noopener" href="https://github.com/PurpleMystic-star/blog-backend">https://github.com/PurpleMystic-star/blog-backend</a></p>
+
+    </div>
+
+    
+    
+    
+      
+  <div class="popular-posts-header">Related Posts</div>
+  <ul class="popular-posts">
+    <li class="popular-posts-item">
+      <div class="popular-posts-title"><a href="/springboot-mail.html" rel="bookmark">springboot整合Mail服务</a></div>
+    </li>
+    <li class="popular-posts-item">
+      <div class="popular-posts-title"><a href="/autowired-and-resource.html" rel="bookmark">IDEA对@Autowired的使用提示警告</a></div>
+    </li>
+    <li class="popular-posts-item">
+      <div class="popular-posts-title"><a href="/deploy-springboot2jboss.html" rel="bookmark">deploy springboot to external container(JBoss)</a></div>
+    </li>
+    <li class="popular-posts-item">
+      <div class="popular-posts-title"><a href="/spring-injection-failed.html" rel="bookmark">spring注入null</a></div>
+    </li>
+  </ul>
+
+
+    <footer class="post-footer">
+          
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>Post author:  </strong>紫玄
+  </li>
+  <li class="post-copyright-link">
+      <strong>Post link: </strong>
+      <a href="https://blog.caoyu.info/asciidoc-restdocs.html" title="Asciidoc with Spring Restdocs">https://blog.caoyu.info/asciidoc-restdocs.html</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>Copyright Notice:  </strong>All articles in this blog are licensed under <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> unless stating additionally.
+  </li>
+</ul>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/spring/" rel="tag"># spring</a>
+              <a href="/tags/springboot/" rel="tag"># springboot</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/expand-ipv6-by-shell.html" rel="prev" title="expand IPv6 by shell">
+                  <i class="fa fa-chevron-left"></i> expand IPv6 by shell
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/ansible-install-from-source.html" rel="next" title="ansible install software from source">
+                  ansible install software from source <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+      <div class="tabs tabs-comment">
+        <ul class="nav-tabs">
+            <li class="tab"><a href="#comment-gitalk">gitalk</a></li>
+            <li class="tab"><a href="#comment-livere">livere</a></li>
+        </ul>
+        <div class="tab-content">
+            <div class="tab-pane gitalk" id="comment-gitalk">
+              <div class="comments gitalk-container"></div>
+            </div>
+            <div class="tab-pane livere" id="comment-livere">
+              <div class="comments" id="lv-container" data-id="city" data-uid="MTAyMC8zMTUxNC84MDc4"></div>
+            </div>
+        </div>
+      </div>
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+
+<div class="copyright">
+  &copy; 2017 – 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">紫玄</span>
+</div>
+<div class="wordcount">
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-line"></i>
+    </span>
+    <span title="Symbols count total">259k</span>
+  </span>
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="Reading time total">3:55</span>
+  </span>
+</div>
+<div class="busuanzi-count">
+    <span class="post-meta-item" id="busuanzi_container_site_uv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="Total Visitors">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="Total Views">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/" rel="noopener" target="_blank">NexT.Gemini</a>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <script size="300" alpha="0.6" zIndex="-1" src="https://cdn.jsdelivr.net/npm/ribbon.js@1.0.2/dist/ribbon.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/animejs@3.2.1/lib/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@next-theme/pjax@0.5.0/pjax.min.js" integrity="sha256-3NkoLDrmHLTYj7csHIZSr0MHAFTXth7Ua/DDt4MRUAg=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js" integrity="sha256-yt2kYMy0w8AbtF89WXb2P1rfjcP/HTHLT7097U8Y5b8=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/next-boot.js"></script><script src="/js/pjax.js"></script>
+
+  
+<script src="/js/third-party/search/local-search.js"></script>
+
+
+
+
+  
+  <script data-pjax async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+  <script src="https://cdn.jsdelivr.net/npm/quicklink@2.1.0/dist/quicklink.umd.js" integrity="sha256-KK3rvmDcW72MSl9jzzNZWlQjZNrRzAuGhAQ+0SFOg7Q=" crossorigin="anonymous"></script>
+  <script class="next-config" data-name="quicklink" type="application/json">{"enable":true,"home":false,"archive":false,"delay":true,"timeout":3000,"priority":true,"url":"https://blog.caoyu.info/asciidoc-restdocs.html"}</script>
+  <script src="/js/third-party/quicklink.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk@1.7.2/dist/gitalk.css" integrity="sha256-AJnUHL7dBv6PGaeyPQJcgQPDjt/Hn/PvYZde1iqfp8U=" crossorigin="anonymous">
+
+<script class="next-config" data-name="gitalk" type="application/json">{"enable":true,"github_id":"pplmx","repo":"pplmx.github.io","client_id":"f5c8e58699676e488ffd","client_secret":"b5d0d121e0a3ce54fcd43d7e0b80811397047ab8","admin_user":"pplmx","distraction_free_mode":true,"proxy":"https://cors-anywhere.azm.workers.dev/https://github.com/login/oauth/access_token","language":null,"js":{"url":"https://cdn.jsdelivr.net/npm/gitalk@1.7.2/dist/gitalk.min.js","integrity":"sha256-Pmj85ojLaPOWwRtlMJwmezB/Qg8BzvJp5eTzvXaYAfA="},"path_md5":"49e8161821c3626000ec784625ebae06"}</script>
+<script src="/js/third-party/comments/gitalk.js"></script>
+<script src="/js/third-party/comments/livere.js"></script>
+
+<script>
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('/sw.js');
+  });
+}
+</script>
+
+</body>
+</html>
